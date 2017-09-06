@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import _ from 'lodash';
 import SearchBar from './Components/searchBar';
 import YouTubeSearch from 'youtube-api-search';
 import VideoList from './Components/videoList';
@@ -13,10 +14,16 @@ class App extends Component {
         this.state = {
             videos: [],
             selectedVideo: null
-        }
+        };
 
-        YouTubeSearch({key: API_Key, term: 'destiny 2'}, (videos) => {
-            this.setState({
+        this.videoSearch('destiny 2');
+    }
+
+
+    videoSearch(searchTerm) {
+        console.log('searchTerm ', searchTerm);
+            YouTubeSearch({key: API_Key, term: searchTerm}, (videos) => {
+                this.setState({
                 videos: videos,
                 selectedVideo: videos[0]
             });
@@ -24,9 +31,12 @@ class App extends Component {
     }
 
     render() {
+
+        const videoSearch = _.debounce((term) => {this.videoSearch(term) }, 300);
+
         return (
             <div>
-                <SearchBar />
+                <SearchBar onSearchTermChange={videoSearch} />
                 <VideoDetail video={this.state.selectedVideo} />
                 <VideoList
                     onVideoSelect={selectedVideo => this.setState({selectedVideo})}

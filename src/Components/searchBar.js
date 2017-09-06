@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 
 class SearchBar extends Component {
     constructor(props) {
@@ -17,9 +16,14 @@ class SearchBar extends Component {
                 <input
                 value={this.state.term}
                 placeholder={this.state.placeholder}
-                onChange={event => this.setState({term: event.target.value})} />
+                onChange={event => this.onInputChange(event.target.value)} />
             </div>
         );
+    }
+
+    onInputChange(term) {
+        this.setState({term});
+        this.props.onSearchTermChange(term);
     }
 }
 
